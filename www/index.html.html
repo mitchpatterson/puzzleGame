@@ -1,0 +1,193 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>IC Advanced Basics - LOGIC Answer</title>
+
+<style>
+	body {margin:0px; padding:0px; background-color:#ccc; overflow:hidden;}
+	#myCanvas {position:absolute; left:0px; top:0px; background-color:#ccc;}
+</style>
+
+<script src="../libraries/createjs-2015.11.26.min.js"></script>
+<script src="../libraries/im.js"></script>
+
+
+<script>
+
+window.addEventListener("load", function() {
+
+	var stageW;
+	var stageH;
+	var ready = false;
+	var resize;
+	var orientation;
+
+	makeCanvas();
+
+	var stage = new createjs.Stage("myCanvas");
+	stage.enableMouseOver(10);  // leave out if mobile
+	createjs.Touch.enable(stage, true);
+	sizeStage();
+
+	// end template header
+	//------------------------------------------
+
+
+	 var rows = 2;
+	 var tileColor = "#e74c3c";
+	 var spacing = stageW*0.1;
+	 var size = (stageW/rows - spacing);
+	 var posX = size + spacing;
+	 var posY = size + spacing;
+
+
+	var tiles = new createjs.Container();
+	tiles.cursor = "pointer";
+	stage.addChild(tiles);
+
+	var tile;
+	function makeTiles() {
+		for (var i=0; i<rows*rows; i++) {
+			tile = new createjs.Shape();
+			tile.graphics.f(tileColor).drawRect(size,0,radius);
+			tiles.addChild(tile);
+			tile.y = posY;
+			tile.num = mix[i]; // this will determine the distance the circle moves
+		}
+	}
+	makeBalls();
+
+	var animateCheck = false; // optional: animate one at a time (helps performance on mobile)
+	balls.on("click", function(e) {
+		if (animateCheck) return;
+		balls.cursor = "default";
+		animateCheck = true;
+		ball = e.target;
+		createjs.Tween.get(ball)
+			.to({x:stageW*.7*(ball.num+1)/num}, 500, createjs.Ease.quadOut)
+			.to({x:0}, 500, createjs.Ease.quadIn)
+			.call(function(){
+				createjs.Ticker.off("tick", ticker); // remove the ticker when done
+				// we are done animating so now we can animate another
+				balls.cursor = "pointer";
+				animateCheck = false;
+				// check win and lose
+				// note, we let the circle finish animating before concluding
+				guesses.push(ball.num);
+				guesses.shift(); // keep right number of guess by removing from front
+				if (guesses.toString() == answer.toString()) {
+					makeEnd(true);
+				} else {
+					countDown.text = --count;
+					if (count <= 0) makeEnd(false);
+				}
+			});
+		var ticker = createjs.Ticker.on("tick", stage);
+	});
+
+	var end; // either holds a green shape for win or a black shape for lose
+	function makeEnd(win) {
+		end = new createjs.Shape();
+		end.graphics.f(win?"green":"black").dr(0,0,stageW,stageH);
+		stage.addChild(end);
+		end.cursor = "pointer";
+		end.on("click", restart);
+		stage.update();
+	}
+
+	function restart() {
+		setAnswers();
+		makeBalls();
+		count = startCount;
+		makeCountDown();
+		stage.removeChild(end);
+		stage.update();
+	};
+
+	var countDown;
+	function makeCountDown() {
+		stage.removeChild(countDown);
+		countDown = new createjs.Text(count, stageW*.1 + "px arial", "#333");
+		countDown.textAlign = "right";
+		stage.addChild(countDown);
+		countDown.x = stageW*.9;
+		countDown.y = stageH*.85;
+	}
+	makeCountDown();
+
+	resize = function() {
+		// here is where we put code to resize
+
+		makeBalls();
+		makeCountDown();
+		// would want to scale ending too but not going to bother
+		stage.update();
+	}
+
+	stage.update();
+	ready = true;
+
+	// ----------------------------------------------
+	// start template footer
+	function makeCanvas() {
+		// make a canvas tag and apply attributes for id, width and height
+		var canvas = document.createElement("canvas");
+		canvas.setAttribute("id", "myCanvas");
+
+		// get maximum size for canvas
+		// note: iOS6 does not work from loading icon unless keep canvas within device size
+		// thank you apple for this and many other days of hell
+		largest = Math.max(window.innerWidth, screen.width, window.innerHeight, screen.height);
+		if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
+		canvas.setAttribute("width", largest);
+		canvas.setAttribute("height", largest);
+
+		// add our canvas tag
+		document.body.appendChild(canvas);
+
+		// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
+		// and stop scrollwheel from moving page
+		var a = function(e) {
+			if (!e) e = event;
+			if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
+		}
+		var b = function(e) {
+			if (!e) e = event;
+			e.preventDefault();
+		}
+		var c = b;
+		window.addEventListener("keydown", a);
+		window.addEventListener("mousewheel", b);
+		window.addEventListener("DOMMouseScroll", c);
+		window.addEventListener('resize', function() {
+			sizeStage();
+			if (/ios|android|nexus/i.test(navigator.userAgent)) {
+				setTimeout(function() {
+					sizeStage();
+				}, 500); // to catch delayed screen sizes
+			}
+		});
+	}
+
+	function sizeStage() {
+		// earlier than IE9 does not have innerWidth
+		// inner is better on mobile when zoomed so can't always use client
+		// ternary operator
+		stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+		stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
+
+		// if wider than high then we have horizontal (or landscape)
+		orientation = (stageW>stageH) ? "horizontal" : "vertical";
+
+		if (stage) stage.setBounds(0,0,stageW,stageH);
+		if (ready) resize();
+	}
+});
+
+</script>
+</head>
+<body>
+</body>
+</html>
