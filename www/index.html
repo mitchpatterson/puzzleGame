@@ -7,11 +7,10 @@
 
 <style>
 	body {margin:0px; padding:0px; background-color:#ccc; overflow:hidden;}
-	#myCanvas {position:absolute; left:0px; top:0px; background-color:#ccc;}
+	#myCanvas {position:absolute; left:0px; top:0px; background-color:#2c3e50;}
 </style>
 
-<script src="../libraries/createjs-2015.11.26.min.js"></script>
-<script src="../libraries/im.js"></script>
+<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
 
 
 <script>
@@ -35,96 +34,139 @@ window.addEventListener("load", function() {
 	//------------------------------------------
 
 
-	 var rows = 2;
+	 var rows = 4;
 	 var tileColor = "#e74c3c";
-	 var spacing = stageW*0.1;
-	 var size = (stageW/rows - spacing);
-	 var posX = size + spacing;
-	 var posY = size + spacing;
+	 var spacingX = stageW*0.1;
+	 var spacingY = stageH*0.1;
+	 var sizeX = (stageW/rows - spacingX);
+	 var sizeY = (stageH/rows - spacingY);
+	 var posX = 0 + spacingX/2;
+	 var posY = 0 + spacingY/2;
+	 var numberArray = [];
+	 var imgArray = ["img/monkey1.png", 
+	 				 "img/monkey2.png",
+	 				 "img/monkey3.png",
+	 				 "img/monkey4.png",
+	 				 "img/monkey5.png",
+	 				 "img/monkey6.png",
+	 				 "img/monkey7.png",
+	 				 "img/monkey8.png"]
 
+	// ORDER MATTERS
+	createNumbers();
 
 	var tiles = new createjs.Container();
 	tiles.cursor = "pointer";
 	stage.addChild(tiles);
 
-	var tile;
+	var idTag = 1;
+	var tile, backing;
 	function makeTiles() {
 		for (var i=0; i<rows*rows; i++) {
-			tile = new createjs.Shape();
-			tile.graphics.f(tileColor).drawRect(size,0,radius);
+
+			if (posX >= stageW) {
+				posY += sizeY + spacingY;
+				posX = 0 + spacingX/2;
+			} 
+
+			tile = new createjs.Container();
+			tile.mouseChildren = false;
+
+			backing = new createjs.Shape();
+			backing.graphics.f(tileColor).drawRect(posX, posY, sizeX, sizeY);
+
+			var rand = Math.floor(Math.random()*(numberArray.length));
+
+			tile.number = numberArray.splice(rand, 1)[0];
+			tile.id = idTag;
+			idTag += 1;
+
+			tile.addChild(backing);
 			tiles.addChild(tile);
-			tile.y = posY;
-			tile.num = mix[i]; // this will determine the distance the circle moves
+
+			img = new createjs.Bitmap(imgArray[tile.number]);
+			img.setBounds(null, null, 40, 40);
+			img.scaleX = img.scaleY = 0.2;
+			var w = img.getBounds().width/2;
+			var h = img.getBounds().height/2;
+			img.x = posX + sizeX/2 - w;
+			img.y = posY + sizeY/2 - h;
+			img.alpha = 0;
+
+			tile.addChild(img);
+
+			tile.img = img;
+
+
+			posX += sizeX + spacingX;
 		}
 	}
-	makeBalls();
+	makeTiles();
 
-	var animateCheck = false; // optional: animate one at a time (helps performance on mobile)
-	balls.on("click", function(e) {
-		if (animateCheck) return;
-		balls.cursor = "default";
-		animateCheck = true;
-		ball = e.target;
-		createjs.Tween.get(ball)
-			.to({x:stageW*.7*(ball.num+1)/num}, 500, createjs.Ease.quadOut)
-			.to({x:0}, 500, createjs.Ease.quadIn)
-			.call(function(){
-				createjs.Ticker.off("tick", ticker); // remove the ticker when done
-				// we are done animating so now we can animate another
-				balls.cursor = "pointer";
-				animateCheck = false;
-				// check win and lose
-				// note, we let the circle finish animating before concluding
-				guesses.push(ball.num);
-				guesses.shift(); // keep right number of guess by removing from front
-				if (guesses.toString() == answer.toString()) {
-					makeEnd(true);
-				} else {
-					countDown.text = --count;
-					if (count <= 0) makeEnd(false);
-				}
-			});
-		var ticker = createjs.Ticker.on("tick", stage);
+	function createNumbers() {
+		var num = 0;
+		
+		for(i=0; i<(rows*rows)/2; i++) {
+			numberArray.push(num);
+			numberArray.push(num);
+			num += 1;
+		}
+	}
+
+	var checkArray = [];
+
+	tiles.on("click", function(e) {
+		
+		if(checkArray.length == 0) {
+			e.target.img.alpha = 1;
+			checkArray.push(e.target);
+			stage.update();
+		} else if (checkArray[0].id == e.target.id){
+			e.target.img.alpha = 0;
+			checkArray = [];
+			stage.update();
+		} else if (checkArray[0].number == e.target.number) {
+			e.target.img.alpha = 1;
+			checkArray = [];
+			gameCounter += 1;
+			stage.update();
+		} else if (checkArray[0].number != e.target.number) {
+			e.target.img.alpha = 1;
+			setTimeout(function(){
+				checkArray[0].img.alpha = 0;
+				e.target.img.alpha = 0;
+				checkArray = [];
+				stage.update();
+			}, 500)
+			stage.update();
+		}
+
+		stage.update();
+		// var ticker = createjs.Ticker.on("tick", stage);
 	});
 
-	var end; // either holds a green shape for win or a black shape for lose
-	function makeEnd(win) {
-		end = new createjs.Shape();
-		end.graphics.f(win?"green":"black").dr(0,0,stageW,stageH);
-		stage.addChild(end);
-		end.cursor = "pointer";
-		end.on("click", restart);
-		stage.update();
+	stage.on("tick", function(){
+		if(gameCounter == ((rows*rows)/2)) {
+			endGame();
+		}
+	})
+
+	var gameCounter = 0;
+
+	function endGame(){
+		alert("You Win! Play Again?");
+		location.reload();
 	}
 
-	function restart() {
-		setAnswers();
-		makeBalls();
-		count = startCount;
-		makeCountDown();
-		stage.removeChild(end);
-		stage.update();
-	};
+	/////////////////////////////////////////////////////////
 
-	var countDown;
-	function makeCountDown() {
-		stage.removeChild(countDown);
-		countDown = new createjs.Text(count, stageW*.1 + "px arial", "#333");
-		countDown.textAlign = "right";
-		stage.addChild(countDown);
-		countDown.x = stageW*.9;
-		countDown.y = stageH*.85;
-	}
-	makeCountDown();
+	// resize = function() {
+	// 	// here is where we put code to resize
 
-	resize = function() {
-		// here is where we put code to resize
-
-		makeBalls();
-		makeCountDown();
-		// would want to scale ending too but not going to bother
-		stage.update();
-	}
+	// 	makeTiles();
+	// 	// would want to scale ending too but not going to bother
+	// 	stage.update();
+	// }
 
 	stage.update();
 	ready = true;
@@ -182,7 +224,7 @@ window.addEventListener("load", function() {
 		orientation = (stageW>stageH) ? "horizontal" : "vertical";
 
 		if (stage) stage.setBounds(0,0,stageW,stageH);
-		if (ready) resize();
+		// if (ready) resize();
 	}
 });
 
