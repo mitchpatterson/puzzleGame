@@ -10,7 +10,8 @@
 	#myCanvas {position:absolute; left:0px; top:0px; background-color:#2c3e50;}
 </style>
 
-<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
 
 
 <script>
@@ -33,9 +34,12 @@ window.addEventListener("load", function() {
 	// end template header
 	//------------------------------------------
 
+	stage.enableMouseOver(10);
+	createjs.Touch.enable(stage, true);
 
 	 var rows = 4;
 	 var tileColor = "#e74c3c";
+	 var bgColor = "#2c3e50";
 	 var spacingX = stageW*0.1;
 	 var spacingY = stageH*0.1;
 	 var sizeX = (stageW/rows - spacingX);
@@ -43,6 +47,7 @@ window.addEventListener("load", function() {
 	 var posX = 0 + spacingX/2;
 	 var posY = 0 + spacingY/2;
 	 var numberArray = [];
+	 var remaining = 20;
 	 var imgArray = ["img/monkey1.png", 
 	 				 "img/monkey2.png",
 	 				 "img/monkey3.png",
@@ -50,7 +55,15 @@ window.addEventListener("load", function() {
 	 				 "img/monkey5.png",
 	 				 "img/monkey6.png",
 	 				 "img/monkey7.png",
-	 				 "img/monkey8.png"]
+	 				 "img/monkey8.png"];
+
+	// Countdown of turns (20)
+	var countdown = new createjs.Text("" + remaining, "20px Arial", "white"); 
+	var countW = countdown.getBounds().width/2;
+	var countH = countdown.getBounds().height/2;
+	countdown.x = stageW/2 - countW;
+	countdown.y = stageH/2 - countH;
+	stage.addChild(countdown);
 
 	// ORDER MATTERS
 	createNumbers();
@@ -114,6 +127,7 @@ window.addEventListener("load", function() {
 	}
 
 	var checkArray = [];
+	var turn = 0;
 
 	tiles.on("click", function(e) {
 		
@@ -129,6 +143,9 @@ window.addEventListener("load", function() {
 			e.target.img.alpha = 1;
 			checkArray = [];
 			gameCounter += 1;
+			turn += 1;
+			remaining -= 1;
+			countdown.text = "" + remaining;
 			stage.update();
 		} else if (checkArray[0].number != e.target.number) {
 			e.target.img.alpha = 1;
@@ -137,26 +154,114 @@ window.addEventListener("load", function() {
 				e.target.img.alpha = 0;
 				checkArray = [];
 				stage.update();
-			}, 500)
+			}, 500);
+			turn += 1;
+			remaining -= 1;
+			countdown.text = "" + remaining;
 			stage.update();
 		}
 
 		stage.update();
-		// var ticker = createjs.Ticker.on("tick", stage);
 	});
+	
+	var swipeScreen = false;
 
-	stage.on("tick", function(){
-		if(gameCounter == ((rows*rows)/2)) {
+	if(gameCounter == ((rows*rows)/2)) {
 			endGame();
-		}
-	})
+	}
 
 	var gameCounter = 0;
 
 	function endGame(){
-		alert("You Win! Play Again?");
+		alert("You Won in " + turn + " Turns! Play Again?");
 		location.reload();
+	};
+
+	//////////////////
+	var instructionsPage = new createjs.Container();
+		stage.addChild(instructionsPage);
+
+	instructions();
+	function instructions() {
+
+		var backdrop = new createjs.Shape();
+		backdrop.graphics.f(bgColor).drawRect(0,0,stageW,stageH);
+		instructionsPage.addChild(backdrop);
+
+		var title = new createjs.Text("Monkey Mania", "bold 40px Bangers", "#fff");
+		instructionsPage.addChild(title);
+		var titleW = title.getBounds().width/2;
+		var titleH = title.getBounds().height/2;
+		title.x = stageW/2 - titleW;
+		title.y = stageH/8 - titleH;
+
+		var p = "It's a game of memory! Start by selecting a tile on the 4x4 Monkey board \n\nand then matching that monkey with a pal that looks the exact same!\n\nIn order to make the monkeys happy - once you monkey is revealed, if you\n\n do not select his perfect match on the next selection - then the first \n\nmonkey will disappear and you lose a turn! The objective of the game is to \n\nmatch all the monkeys to their pal before the turn counter in the \n\ncenter of the screen reaches ZERO! Good luck, and may monkeys be with YOU!";
+
+		var howToPlay = new createjs.Text(p, "18px Bangers", tileColor);
+		var htpW = howToPlay.getBounds().width/2;
+		var htpH = howToPlay.getBounds().height/2;
+		howToPlay.set({textAlign: 'center'});
+		howToPlay.x = stageW/2;
+		howToPlay.y = stageH/2 - htpH;
+		instructionsPage.addChild(howToPlay);
+	};
+
+	document.addEventListener("touchstart", respondToStart);
+	document.addEventListener("touchmove", respondToMove);
+
+	var x = null;
+	var y = null;
+
+	function respondToStart(ev){
+	x = ev.touches[0].clientX;
+	y = ev.touches[0].clientY;
 	}
+
+	function respondToMove(ev){
+		if(!x || !y) return;
+
+		//remember current location
+		var curX = ev.touches[0].clientX;
+		var curY = ev.touches[0].clientY;
+
+		//calculate the difference (delta)
+		var dX = curX - x;
+		var dY = curY - y;
+
+		if(Math.abs(dX) < 30 && Math.abs(dY) < 30) return;
+
+		if(Math.abs(dX) > Math.abs(dY)){
+			//swipe sideways
+			if(dX > 0){
+				//right
+				console.log("right");
+			} else {
+				//left
+				console.log("left");
+				swipeScreen = true;
+				doIt();
+				document.removeEventListener("touchmove", respondToMove);
+			} 
+		} 
+		stage.update();
+	}
+
+	var listener = createjs.Ticker.on("tick", stage);
+
+	function doIt(){
+		if(swipeScreen) {
+
+			for(i=0; i<(instructionsPage.getNumChildren()); i++) {
+				createjs.Tween.get(instructionsPage.getChildAt(i))
+					.to({x: -stageW}, 1000);
+				stage.update();
+			}
+
+			stage.update();
+
+		}
+	}
+
 
 	/////////////////////////////////////////////////////////
 
