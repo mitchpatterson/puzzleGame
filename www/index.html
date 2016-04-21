@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1">
 <title>IC Advanced Basics - LOGIC Answer</title>
 
 <style>
@@ -188,22 +189,49 @@ window.addEventListener("load", function() {
 		backdrop.graphics.f(bgColor).drawRect(0,0,stageW,stageH);
 		instructionsPage.addChild(backdrop);
 
-		var title = new createjs.Text("Monkey Mania", "bold 40px Bangers", "#fff");
+		var title = new createjs.Text("Monkey Mania", "bold 50px Bangers", "#fff");
 		instructionsPage.addChild(title);
 		var titleW = title.getBounds().width/2;
 		var titleH = title.getBounds().height/2;
-		title.x = stageW/2 - titleW;
+		title.x = stageW/2 - titleW*0.75;
 		title.y = stageH/8 - titleH;
 
-		var p = "It's a game of memory! Start by selecting a tile on the 4x4 Monkey board \n\nand then matching that monkey with a pal that looks the exact same!\n\nIn order to make the monkeys happy - once you monkey is revealed, if you\n\n do not select his perfect match on the next selection - then the first \n\nmonkey will disappear and you lose a turn! The objective of the game is to \n\nmatch all the monkeys to their pal before the turn counter in the \n\ncenter of the screen reaches ZERO! Good luck, and may monkeys be with YOU!";
+		var p = "It's a game of memory! Start by selecting a tile \n\non the 4x4 Monkey board and then matching that \n\nmonkey with a pal that looks the exact same! In\n\n order to make the monkeys happy - once you monkey\n\n is revealed, if you do not select his perfect match\n\n on the next selection - then the first monkey will\n\n disappear and you lose a turn! The objective of the \n\ngame is to match all the monkeys to their pal\n\n before the turn counter in the center of the screen \n\nreaches ZERO! Good luck, and may monkeys be with YOU!";
 
 		var howToPlay = new createjs.Text(p, "18px Bangers", tileColor);
 		var htpW = howToPlay.getBounds().width/2;
 		var htpH = howToPlay.getBounds().height/2;
 		howToPlay.set({textAlign: 'center'});
 		howToPlay.x = stageW/2;
-		howToPlay.y = stageH/2 - htpH;
+		howToPlay.y = stageH/2 - htpH*0.75;
 		instructionsPage.addChild(howToPlay);
+
+		var monkey1 = new createjs.Bitmap("img/monkey1-white.png");
+		monkey1.setBounds(null, null, 40, 40);
+		monkey1.scaleX = monkey1.scaleY = 0.05;
+		var monkey1W = monkey1.getBounds().width/2;
+		var monkey1H = monkey1.getBounds().height/2;
+		monkey1.x = stageW/4;
+		monkey1.y = stageH/4-monkey1H;
+		instructionsPage.addChild(monkey1);
+
+		var monkey2 = new createjs.Bitmap("img/monkey2-white.png");
+		monkey2.setBounds(null, null, 40, 40);
+		monkey2.scaleX = monkey2.scaleY = 0.06;
+		var monkey2W = monkey2.getBounds().width/2;
+		var monkey2H = monkey2.getBounds().height/2;
+		monkey2.x = stageW/2;
+		monkey2.y = stageH/4-monkey2H;
+		instructionsPage.addChild(monkey2);
+
+		var monkey3 = new createjs.Bitmap("img/monkey3-white.png");
+		monkey3.setBounds(null, null, 40, 40);
+		monkey3.scaleX = monkey3.scaleY = 0.06;
+		var monkey3W = monkey3.getBounds().width/2;
+		var monkey3H = monkey3.getBounds().height/2;
+		monkey3.x = stageW/4*3;
+		monkey3.y = stageH/4-monkey3H;
+		instructionsPage.addChild(monkey3);
 	};
 
 	document.addEventListener("touchstart", respondToStart);
