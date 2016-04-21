@@ -38,266 +38,270 @@ window.addEventListener("load", function() {
 	stage.enableMouseOver(10);
 	createjs.Touch.enable(stage, true);
 
-	 var rows = 4;
-	 var tileColor = "#e74c3c";
-	 var bgColor = "#2c3e50";
-	 var spacingX = stageW*0.1;
-	 var spacingY = stageH*0.1;
-	 var sizeX = (stageW/rows - spacingX);
-	 var sizeY = (stageH/rows - spacingY);
-	 var posX = 0 + spacingX/2;
-	 var posY = 0 + spacingY/2;
-	 var numberArray = [];
-	 var remaining = 20;
-	 var imgArray = ["img/monkey1.png", 
-	 				 "img/monkey2.png",
-	 				 "img/monkey3.png",
-	 				 "img/monkey4.png",
-	 				 "img/monkey5.png",
-	 				 "img/monkey6.png",
-	 				 "img/monkey7.png",
-	 				 "img/monkey8.png"];
+	var shape = new createjs.Shape();
+	shape.graphics.f("white").drawRect(0,0,200,200);
+	stage.addChild(shape);
 
-	// Countdown of turns (20)
-	var countdown = new createjs.Text("" + remaining, "20px Arial", "white"); 
-	var countW = countdown.getBounds().width/2;
-	var countH = countdown.getBounds().height/2;
-	countdown.x = stageW/2 - countW;
-	countdown.y = stageH/2 - countH;
-	stage.addChild(countdown);
+	//  var rows = 4;
+	//  var tileColor = "#e74c3c";
+	//  var bgColor = "#2c3e50";
+	//  var spacingX = stageW*0.1;
+	//  var spacingY = stageH*0.1;
+	//  var sizeX = (stageW/rows - spacingX);
+	//  var sizeY = (stageH/rows - spacingY);
+	//  var posX = 0 + spacingX/2;
+	//  var posY = 0 + spacingY/2;
+	//  var numberArray = [];
+	//  var remaining = 20;
+	//  var imgArray = ["img/monkey1.png", 
+	//  				 "img/monkey2.png",
+	//  				 "img/monkey3.png",
+	//  				 "img/monkey4.png",
+	//  				 "img/monkey5.png",
+	//  				 "img/monkey6.png",
+	//  				 "img/monkey7.png",
+	//  				 "img/monkey8.png"];
 
-	// ORDER MATTERS
-	createNumbers();
+	// // Countdown of turns (20)
+	// var countdown = new createjs.Text("" + remaining, "20px Arial", "white"); 
+	// var countW = countdown.getBounds().width/2;
+	// var countH = countdown.getBounds().height/2;
+	// countdown.x = stageW/2 - countW;
+	// countdown.y = stageH/2 - countH;
+	// stage.addChild(countdown);
 
-	var tiles = new createjs.Container();
-	tiles.cursor = "pointer";
-	stage.addChild(tiles);
+	// // ORDER MATTERS
+	// createNumbers();
 
-	var idTag = 1;
-	var tile, backing;
-	function makeTiles() {
-		for (var i=0; i<rows*rows; i++) {
+	// var tiles = new createjs.Container();
+	// tiles.cursor = "pointer";
+	// stage.addChild(tiles);
 
-			if (posX >= stageW) {
-				posY += sizeY + spacingY;
-				posX = 0 + spacingX/2;
-			} 
+	// var idTag = 1;
+	// var tile, backing;
+	// function makeTiles() {
+	// 	for (var i=0; i<rows*rows; i++) {
 
-			tile = new createjs.Container();
-			tile.mouseChildren = false;
+	// 		if (posX >= stageW) {
+	// 			posY += sizeY + spacingY;
+	// 			posX = 0 + spacingX/2;
+	// 		} 
 
-			backing = new createjs.Shape();
-			backing.graphics.f(tileColor).drawRect(posX, posY, sizeX, sizeY);
+	// 		tile = new createjs.Container();
+	// 		tile.mouseChildren = false;
 
-			var rand = Math.floor(Math.random()*(numberArray.length));
+	// 		backing = new createjs.Shape();
+	// 		backing.graphics.f(tileColor).drawRect(posX, posY, sizeX, sizeY);
 
-			tile.number = numberArray.splice(rand, 1)[0];
-			tile.id = idTag;
-			idTag += 1;
+	// 		var rand = Math.floor(Math.random()*(numberArray.length));
 
-			tile.addChild(backing);
-			tiles.addChild(tile);
+	// 		tile.number = numberArray.splice(rand, 1)[0];
+	// 		tile.id = idTag;
+	// 		idTag += 1;
 
-			// img = new createjs.Bitmap(imgArray[tile.number]);
-			// img.setBounds(null, null, 40, 40);
-			// img.scaleX = img.scaleY = 0.2;
-			// var w = img.getBounds().width/2;
-			// var h = img.getBounds().height/2;
-			// img.x = posX + sizeX/2 - w;
-			// img.y = posY + sizeY/2 - h;
-			// img.alpha = 0;
+	// 		tile.addChild(backing);
+	// 		tiles.addChild(tile);
 
-			img = new createjs.Shape();
-			img.graphics.f("white").drawRect(0,0,30,30);
-			img.setBounds(null, null, 40, 40);
-			// img.scaleX = img.scaleY = 0.2;
-			var w = img.getBounds().width/2;
-			var h = img.getBounds().height/2;
-			img.x = posX + sizeX/2 - w;
-			img.y = posY + sizeY/2 - h;
+	// 		// img = new createjs.Bitmap(imgArray[tile.number]);
+	// 		// img.setBounds(null, null, 40, 40);
+	// 		// img.scaleX = img.scaleY = 0.2;
+	// 		// var w = img.getBounds().width/2;
+	// 		// var h = img.getBounds().height/2;
+	// 		// img.x = posX + sizeX/2 - w;
+	// 		// img.y = posY + sizeY/2 - h;
+	// 		// img.alpha = 0;
 
-			tile.addChild(img);
+	// 		img = new createjs.Shape();
+	// 		img.graphics.f("white").drawRect(0,0,30,30);
+	// 		img.setBounds(null, null, 40, 40);
+	// 		// img.scaleX = img.scaleY = 0.2;
+	// 		var w = img.getBounds().width/2;
+	// 		var h = img.getBounds().height/2;
+	// 		img.x = posX + sizeX/2 - w;
+	// 		img.y = posY + sizeY/2 - h;
 
-			tile.img = img;
+	// 		tile.addChild(img);
+
+	// 		tile.img = img;
 
 
-			posX += sizeX + spacingX;
-		}
-	}
-	makeTiles();
+	// 		posX += sizeX + spacingX;
+	// 	}
+	// }
+	// makeTiles();
 
-	function createNumbers() {
-		var num = 0;
+	// function createNumbers() {
+	// 	var num = 0;
 		
-		for(i=0; i<(rows*rows)/2; i++) {
-			numberArray.push(num);
-			numberArray.push(num);
-			num += 1;
-		}
-	}
+	// 	for(i=0; i<(rows*rows)/2; i++) {
+	// 		numberArray.push(num);
+	// 		numberArray.push(num);
+	// 		num += 1;
+	// 	}
+	// }
 
-	var checkArray = [];
-	var turn = 0;
+	// var checkArray = [];
+	// var turn = 0;
 
-	tiles.on("click", function(e) {
+	// tiles.on("click", function(e) {
 		
-		if(checkArray.length == 0) {
-			e.target.img.alpha = 1;
-			checkArray.push(e.target);
-			stage.update();
-		} else if (checkArray[0].id == e.target.id){
-			e.target.img.alpha = 0;
-			checkArray = [];
-			stage.update();
-		} else if (checkArray[0].number == e.target.number) {
-			e.target.img.alpha = 1;
-			checkArray = [];
-			gameCounter += 1;
-			turn += 1;
-			remaining -= 1;
-			countdown.text = "" + remaining;
-			stage.update();
-		} else if (checkArray[0].number != e.target.number) {
-			e.target.img.alpha = 1;
-			setTimeout(function(){
-				checkArray[0].img.alpha = 0;
-				e.target.img.alpha = 0;
-				checkArray = [];
-				stage.update();
-			}, 500);
-			turn += 1;
-			remaining -= 1;
-			countdown.text = "" + remaining;
-			stage.update();
-		}
+	// 	if(checkArray.length == 0) {
+	// 		e.target.img.alpha = 1;
+	// 		checkArray.push(e.target);
+	// 		stage.update();
+	// 	} else if (checkArray[0].id == e.target.id){
+	// 		e.target.img.alpha = 0;
+	// 		checkArray = [];
+	// 		stage.update();
+	// 	} else if (checkArray[0].number == e.target.number) {
+	// 		e.target.img.alpha = 1;
+	// 		checkArray = [];
+	// 		gameCounter += 1;
+	// 		turn += 1;
+	// 		remaining -= 1;
+	// 		countdown.text = "" + remaining;
+	// 		stage.update();
+	// 	} else if (checkArray[0].number != e.target.number) {
+	// 		e.target.img.alpha = 1;
+	// 		setTimeout(function(){
+	// 			checkArray[0].img.alpha = 0;
+	// 			e.target.img.alpha = 0;
+	// 			checkArray = [];
+	// 			stage.update();
+	// 		}, 500);
+	// 		turn += 1;
+	// 		remaining -= 1;
+	// 		countdown.text = "" + remaining;
+	// 		stage.update();
+	// 	}
 
-		stage.update();
-	});
+	// 	stage.update();
+	// });
 	
-	var swipeScreen = false;
+	// var swipeScreen = false;
 
-	if(gameCounter == ((rows*rows)/2)) {
-			endGame();
-	}
+	// if(gameCounter == ((rows*rows)/2)) {
+	// 		endGame();
+	// }
 
-	var gameCounter = 0;
+	// var gameCounter = 0;
 
-	function endGame(){
-		alert("You Won in " + turn + " Turns! Play Again?");
-		location.reload();
-	};
+	// function endGame(){
+	// 	alert("You Won in " + turn + " Turns! Play Again?");
+	// 	location.reload();
+	// };
 
-	//////////////////
-	var instructionsPage = new createjs.Container();
-		stage.addChild(instructionsPage);
+	// //////////////////
+	// var instructionsPage = new createjs.Container();
+	// 	stage.addChild(instructionsPage);
 
-	instructions();
-	function instructions() {
+	// instructions();
+	// function instructions() {
 
-		var backdrop = new createjs.Shape();
-		backdrop.graphics.f(bgColor).drawRect(0,0,stageW,stageH);
-		instructionsPage.addChild(backdrop);
+	// 	var backdrop = new createjs.Shape();
+	// 	backdrop.graphics.f(bgColor).drawRect(0,0,stageW,stageH);
+	// 	instructionsPage.addChild(backdrop);
 
-		var title = new createjs.Text("Monkey Mania", "bold 30px Bangers", "#fff");
-		instructionsPage.addChild(title);
-		var titleW = title.getBounds().width/2;
-		var titleH = title.getBounds().height/2;
-		title.x = stageW/2 - titleW*0.75;
-		title.y = stageH/8 - titleH;
+	// 	var title = new createjs.Text("Monkey Mania", "bold 30px Bangers", "#fff");
+	// 	instructionsPage.addChild(title);
+	// 	var titleW = title.getBounds().width/2;
+	// 	var titleH = title.getBounds().height/2;
+	// 	title.x = stageW/2 - titleW*0.75;
+	// 	title.y = stageH/8 - titleH;
 
-		var p = "It's a game of memory! Start by selecting a tile \n\non the 4x4 Monkey board and then matching that \n\nmonkey with a pal that looks the exact same! In\n\n order to make the monkeys happy - once you monkey\n\n is revealed, if you do not select his perfect match\n\n on the next selection - then the first monkey will\n\n disappear and you lose a turn! The objective of the \n\ngame is to match all the monkeys to their pal\n\n before the turn counter in the center of the screen \n\nreaches ZERO! Good luck, and may monkeys be with YOU!";
+	// 	var p = "It's a game of memory! Start by selecting a tile \n\non the 4x4 Monkey board and then matching that \n\nmonkey with a pal that looks the exact same! In\n\n order to make the monkeys happy - once you monkey\n\n is revealed, if you do not select his perfect match\n\n on the next selection - then the first monkey will\n\n disappear and you lose a turn! The objective of the \n\ngame is to match all the monkeys to their pal\n\n before the turn counter in the center of the screen \n\nreaches ZERO! Good luck, and may monkeys be with YOU!";
 
-		var howToPlay = new createjs.Text(p, "18px Bangers", tileColor);
-		var htpW = howToPlay.getBounds().width/2;
-		var htpH = howToPlay.getBounds().height/2;
-		howToPlay.set({textAlign: 'center'});
-		howToPlay.x = stageW/2;
-		howToPlay.y = stageH/2 - htpH*0.75;
-		instructionsPage.addChild(howToPlay);
+	// 	var howToPlay = new createjs.Text(p, "18px Bangers", tileColor);
+	// 	var htpW = howToPlay.getBounds().width/2;
+	// 	var htpH = howToPlay.getBounds().height/2;
+	// 	howToPlay.set({textAlign: 'center'});
+	// 	howToPlay.x = stageW/2;
+	// 	howToPlay.y = stageH/2 - htpH*0.75;
+	// 	instructionsPage.addChild(howToPlay);
 
-		var monkey1 = new createjs.Bitmap("img/monkey1-white.png");
-		monkey1.setBounds(null, null, 40, 40);
-		monkey1.scaleX = monkey1.scaleY = 0.05;
-		var monkey1W = monkey1.getBounds().width/2;
-		var monkey1H = monkey1.getBounds().height/2;
-		monkey1.x = stageW/4;
-		monkey1.y = stageH/4-monkey1H;
-		instructionsPage.addChild(monkey1);
+	// 	var monkey1 = new createjs.Bitmap("img/monkey1-white.png");
+	// 	monkey1.setBounds(null, null, 40, 40);
+	// 	monkey1.scaleX = monkey1.scaleY = 0.05;
+	// 	var monkey1W = monkey1.getBounds().width/2;
+	// 	var monkey1H = monkey1.getBounds().height/2;
+	// 	monkey1.x = stageW/4;
+	// 	monkey1.y = stageH/4-monkey1H;
+	// 	instructionsPage.addChild(monkey1);
 
-		var monkey2 = new createjs.Bitmap("img/monkey2-white.png");
-		monkey2.setBounds(null, null, 40, 40);
-		monkey2.scaleX = monkey2.scaleY = 0.06;
-		var monkey2W = monkey2.getBounds().width/2;
-		var monkey2H = monkey2.getBounds().height/2;
-		monkey2.x = stageW/2;
-		monkey2.y = stageH/4-monkey2H;
-		instructionsPage.addChild(monkey2);
+	// 	var monkey2 = new createjs.Bitmap("img/monkey2-white.png");
+	// 	monkey2.setBounds(null, null, 40, 40);
+	// 	monkey2.scaleX = monkey2.scaleY = 0.06;
+	// 	var monkey2W = monkey2.getBounds().width/2;
+	// 	var monkey2H = monkey2.getBounds().height/2;
+	// 	monkey2.x = stageW/2;
+	// 	monkey2.y = stageH/4-monkey2H;
+	// 	instructionsPage.addChild(monkey2);
 
-		var monkey3 = new createjs.Bitmap("img/monkey3-white.png");
-		monkey3.setBounds(null, null, 40, 40);
-		monkey3.scaleX = monkey3.scaleY = 0.06;
-		var monkey3W = monkey3.getBounds().width/2;
-		var monkey3H = monkey3.getBounds().height/2;
-		monkey3.x = stageW/4*3;
-		monkey3.y = stageH/4-monkey3H;
-		instructionsPage.addChild(monkey3);
-	};
+	// 	var monkey3 = new createjs.Bitmap("img/monkey3-white.png");
+	// 	monkey3.setBounds(null, null, 40, 40);
+	// 	monkey3.scaleX = monkey3.scaleY = 0.06;
+	// 	var monkey3W = monkey3.getBounds().width/2;
+	// 	var monkey3H = monkey3.getBounds().height/2;
+	// 	monkey3.x = stageW/4*3;
+	// 	monkey3.y = stageH/4-monkey3H;
+	// 	instructionsPage.addChild(monkey3);
+	// };
 
-	document.addEventListener("touchstart", respondToStart);
-	document.addEventListener("touchmove", respondToMove);
+	// document.addEventListener("touchstart", respondToStart);
+	// document.addEventListener("touchmove", respondToMove);
 
-	var x = null;
-	var y = null;
+	// var x = null;
+	// var y = null;
 
-	function respondToStart(ev){
-	x = ev.touches[0].clientX;
-	y = ev.touches[0].clientY;
-	}
+	// function respondToStart(ev){
+	// x = ev.touches[0].clientX;
+	// y = ev.touches[0].clientY;
+	// }
 
-	function respondToMove(ev){
-		if(!x || !y) return;
+	// function respondToMove(ev){
+	// 	if(!x || !y) return;
 
-		//remember current location
-		var curX = ev.touches[0].clientX;
-		var curY = ev.touches[0].clientY;
+	// 	//remember current location
+	// 	var curX = ev.touches[0].clientX;
+	// 	var curY = ev.touches[0].clientY;
 
-		//calculate the difference (delta)
-		var dX = curX - x;
-		var dY = curY - y;
+	// 	//calculate the difference (delta)
+	// 	var dX = curX - x;
+	// 	var dY = curY - y;
 
-		if(Math.abs(dX) < 30 && Math.abs(dY) < 30) return;
+	// 	if(Math.abs(dX) < 30 && Math.abs(dY) < 30) return;
 
-		if(Math.abs(dX) > Math.abs(dY)){
-			//swipe sideways
-			if(dX > 0){
-				//right
-				console.log("right");
-			} else {
-				//left
-				console.log("left");
-				swipeScreen = true;
-				doIt();
-				document.removeEventListener("touchmove", respondToMove);
-			} 
-		} 
-		stage.update();
-	}
+	// 	if(Math.abs(dX) > Math.abs(dY)){
+	// 		//swipe sideways
+	// 		if(dX > 0){
+	// 			//right
+	// 			console.log("right");
+	// 		} else {
+	// 			//left
+	// 			console.log("left");
+	// 			swipeScreen = true;
+	// 			doIt();
+	// 			document.removeEventListener("touchmove", respondToMove);
+	// 		} 
+	// 	} 
+	// 	stage.update();
+	// }
 
-	var listener = createjs.Ticker.on("tick", stage);
+	// var listener = createjs.Ticker.on("tick", stage);
 
-	function doIt(){
-		if(swipeScreen) {
+	// function doIt(){
+	// 	if(swipeScreen) {
 
-			for(i=0; i<(instructionsPage.getNumChildren()); i++) {
-				createjs.Tween.get(instructionsPage.getChildAt(i))
-					.to({x: -stageW}, 1000);
-				stage.update();
-			}
+	// 		for(i=0; i<(instructionsPage.getNumChildren()); i++) {
+	// 			createjs.Tween.get(instructionsPage.getChildAt(i))
+	// 				.to({x: -stageW}, 1000);
+	// 			stage.update();
+	// 		}
 
-			stage.update();
+	// 		stage.update();
 
-		}
-	}
+	// 	}
+	// }
 
 
 	/////////////////////////////////////////////////////////
