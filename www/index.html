@@ -193,12 +193,12 @@ window.addEventListener("load", function() {
 		instructionsPage.addChild(title);
 		var titleW = title.getBounds().width/2;
 		var titleH = title.getBounds().height/2;
-		title.x = stageW/2 - titleW*0.75;
+		title.x = stageW/2 - titleW;
 		title.y = stageH/8 - titleH;
 
 		var p = "It's a game of memory! Start by selecting a tile \n\non the 4x4 Monkey board and then matching that \n\nmonkey with a pal that looks the exact same! In\n\n order to make the monkeys happy - once you monkey\n\n is revealed, if you do not select his perfect match\n\n on the next selection - then the first monkey will\n\n disappear and you lose a turn! The objective of the \n\ngame is to match all the monkeys to their pal\n\n before the turn counter in the center of the screen \n\nreaches ZERO! Good luck, and may monkeys be with YOU!";
 
-		var howToPlay = new createjs.Text(p, "18px Bangers", tileColor);
+		var howToPlay = new createjs.Text(p, "12px Bangers", tileColor);
 		var htpW = howToPlay.getBounds().width/2;
 		var htpH = howToPlay.getBounds().height/2;
 		howToPlay.set({textAlign: 'center'});
