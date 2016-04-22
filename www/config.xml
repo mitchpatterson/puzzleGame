@@ -9,13 +9,6 @@
 
     <name>Puzzlr</name>
 
-    <icon src="img/icon.png" />
-
-    <icon gap:density="ldpi" gap:platform="android" src="img/icon.png" />
-    <icon gap:density="mdpi" gap:platform="android" src="img/icon.png" />
-    <icon gap:density="hdpi" gap:platform="android" src="img/icon.png" />
-    <icon gap:density="xhdpi" gap:platform="android" src="img/icon.png" />
-
     <description>
         Final Puzzle Game App built for Interactive Coding. 
     </description>
@@ -24,6 +17,12 @@
         Mitchell Patterson 
     </author>
 
-    <platform name="android" />
+    <platform name="android">
+        <icon src="img/icon.png" />
+        <icon gap:density="ldpi" gap:platform="android" src="img/icon.png" />
+        <icon gap:density="mdpi" gap:platform="android" src="img/icon.png" />
+        <icon gap:density="hdpi" gap:platform="android" src="img/icon.png" />
+        <icon gap:density="xhdpi" gap:platform="android" src="img/icon.png" />
+    </platform>
 
 </widget>
