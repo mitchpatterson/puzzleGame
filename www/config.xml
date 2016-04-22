@@ -18,11 +18,11 @@
     </author>
 
     <platform name="android">
-        <icon src="img/icon.png" />
-        <icon gap:density="ldpi" gap:platform="android" src="img/icon.png" />
-        <icon gap:density="mdpi" gap:platform="android" src="img/icon.png" />
-        <icon gap:density="hdpi" gap:platform="android" src="img/icon.png" />
-        <icon gap:density="xhdpi" gap:platform="android" src="img/icon.png" />
+        <icon src="www/img/icon.png" />
+        <icon gap:density="ldpi" gap:platform="android" src="www/img/icon.png" />
+        <icon gap:density="mdpi" gap:platform="android" src="www/img/icon.png" />
+        <icon gap:density="hdpi" gap:platform="android" src="www/img/icon.png" />
+        <icon gap:density="xhdpi" gap:platform="android" src="www/img/icon.png" />
     </platform>
 
 </widget>
